@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced Calorie & Macro Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>Advanced Calorie & Macro Calculator</h1>
+        <p>
+          Calculate your BMR, TDEE, calorie targets, and macronutrient
+          recommendations
+        </p>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="calculator">
+        <div class="input-section">
+          <h2>Your Information</h2>
+
+          <div class="units-toggle">
+            <button id="metric-toggle" class="active">Metric (kg/cm)</button>
+            <button id="imperial-toggle">Imperial (lb/in)</button>
+          </div>
+
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="age">Age (years)</label>
+            <input type="number" id="age" min="18" max="100" value="30" />
+          </div>
+
+          <div class="form-group metric-input">
+            <label for="weight-metric">Weight (kg)</label>
+            <input
+              type="number"
+              id="weight-metric"
+              min="30"
+              max="300"
+              step="0.1"
+              value="70"
+            />
+          </div>
+
+          <div class="form-group imperial-input hidden">
+            <label for="weight-imperial">Weight (lb)</label>
+            <input
+              type="number"
+              id="weight-imperial"
+              min="66"
+              max="660"
+              step="0.1"
+              value="154"
+            />
+          </div>
+
+          <div class="form-group metric-input">
+            <label for="height-metric">Height (cm)</label>
+            <input
+              type="number"
+              id="height-metric"
+              min="100"
+              max="250"
+              value="175"
+            />
+          </div>
+
+          <div class="form-group imperial-input hidden">
+            <label for="height-imperial">Height (in)</label>
+            <input
+              type="number"
+              id="height-imperial"
+              min="39"
+              max="98"
+              step="0.1"
+              value="69"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="activity-level">Activity Level</label>
+            <select id="activity-level">
+              <option value="sedentary">
+                Sedentary (little or no exercise)
+              </option>
+              <option value="light">Light (exercise 1-3 days/week)</option>
+              <option value="moderate" selected>
+                Moderate (exercise 3-5 days/week)
+              </option>
+              <option value="very active">
+                Very Active (exercise 6-7 days/week)
+              </option>
+              <option value="extra active">
+                Extra Active (very intense exercise daily or physical job)
+              </option>
+            </select>
+          </div>
+
+          <div class="switch-container">
+            <label class="switch">
+              <input type="checkbox" id="advanced-toggle" />
+              <span class="slider"></span>
+            </label>
+            <span>Show Advanced Options</span>
+          </div>
+
+          <div class="advanced-options" id="advanced-options">
+            <div class="form-group">
+              <label for="body-fat">Body Fat Percentage (optional)</label>
+              <input
+                type="number"
+                id="body-fat"
+                min="5"
+                max="50"
+                step="0.1"
+                placeholder="Enter if known"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="goal">Primary Goal</label>
+              <select id="goal">
+                <option value="weight_loss" selected>Weight Loss</option>
+                <option value="maintenance">Maintenance</option>
+                <option value="muscle_gain">Muscle Gain</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="formula">BMR Formula</label>
+              <select id="formula">
+                <option value="mifflin" selected>
+                  Mifflin-St Jeor (more accurate for most people)
+                </option>
+                <option value="katch" disabled>
+                  Katch-McArdle (requires body fat %)
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn-calculate" id="calculate-btn">
+            Calculate Results
+          </button>
+        </div>
+
+        <div class="results-section" id="results-section">
+          <h2>Your Results</h2>
+          <p>
+            Enter your information and click "Calculate Results" to see your
+            personalized calorie and macro recommendations.
+          </p>
+
+          <div id="results-content" class="hidden">
+            <div class="results-card">
+              <div class="results-title">Basal Metabolic Rate (BMR)</div>
+              <div class="results-value" id="bmr-value">0</div>
+              <div class="results-description">
+                Calories your body needs at complete rest
+              </div>
+            </div>
+
+            <div class="results-card">
+              <div class="results-title">
+                Total Daily Energy Expenditure (TDEE)
+              </div>
+              <div class="results-value" id="tdee-value">0</div>
+              <div class="results-description">
+                Total calories you burn in a day
+              </div>
+            </div>
+
+            <h3>Calorie Targets</h3>
+            <div class="calorie-goals">
+              <div class="goal-card weight-loss">
+                <div class="goal-title">Weight Loss</div>
+                <div class="goal-value" id="weight-loss-value">0</div>
+                <div class="goal-description">
+                  500 calorie deficit (~0.5kg/week)
+                </div>
+              </div>
+
+              <div class="goal-card maintenance">
+                <div class="goal-title">Maintenance</div>
+                <div class="goal-value" id="maintenance-value">0</div>
+                <div class="goal-description">Maintain current weight</div>
+              </div>
+
+              <div class="goal-card weight-gain">
+                <div class="goal-title">Weight Gain</div>
+                <div class="goal-value" id="weight-gain-value">0</div>
+                <div class="goal-description">
+                  500 calorie surplus (~0.5kg/week)
+                </div>
+              </div>
+            </div>
+
+            <h3>Recommended Macros</h3>
+            <div class="tab-container">
+              <div class="tabs">
+                <div class="tab active" data-tab="weight-loss-tab">
+                  Weight Loss
+                </div>
+                <div class="tab" data-tab="maintenance-tab">Maintenance</div>
+                <div class="tab" data-tab="weight-gain-tab">Weight Gain</div>
+              </div>
+
+              <div id="weight-loss-tab" class="tab-content active">
+                <div class="macro-legend">
+                  <div class="legend-item">
+                    <div
+                      class="legend-color"
+                      style="background-color: #3498db"
+                    ></div>
+                    <span>Protein</span>
+                  </div>
+                  <div class="legend-item">
+                    <div
+                      class="legend-color"
+                      style="background-color: #2ecc71"
+                    ></div>
+                    <span>Carbs</span>
+                  </div>
+                  <div class="legend-item">
+                    <div
+                      class="legend-color"
+                      style="background-color: #e74c3c"
+                    ></div>
+                    <span>Fat</span>
+                  </div>
+                </div>
+
+                <div class="macro-chart">
+                  <div
+                    class="macro-protein"
+                    id="weight-loss-protein-chart"
+                    style="width: 40%"
+                  ></div>
+                  <div
+                    class="macro-carbs"
+                    id="weight-loss-carbs-chart"
+                    style="width: 30%"
+                  ></div>
+                  <div
+                    class="macro-fat"
+                    id="weight-loss-fat-chart"
+                    style="width: 30%"
+                  ></div>
+                </div>
+
+                <table class="macro-table">
+                  <thead>
+                    <tr>
+                      <th>Macronutrient</th>
+                      <th>Grams</th>
+                      <th>Calories</th>
+                      <th>% of Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Protein</td>
+                      <td id="weight-loss-protein">0g</td>
+                      <td id="weight-loss-protein-cals">0</td>
+                      <td id="weight-loss-protein-percent">0%</td>
+                    </tr>
+                    <tr>
+                      <td>Carbohydrates</td>
+                      <td id="weight-loss-carbs">0g</td>
+                      <td id="weight-loss-carbs-cals">0</td>
+                      <td id="weight-loss-carbs-percent">0%</td>
+                    </tr>
+                    <tr>
+                      <td>Fat</td>
+                      <td id="weight-loss-fat">0g</td>
+                      <td id="weight-loss-fat-cals">0</td>
+                      <td id="weight-loss-fat-percent">0%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div id="maintenance-tab" class="tab-content">
+                <div class="macro-legend">
+                  <div class="legend-item">
+                    <div
+                      class="legend-color"
+                      style="background-color: #3498db"
+                    ></div>
+                    <span>Protein</span>
+                  </div>
+                  <div class="legend-item">
+                    <div
+                      class="legend-color"
+                      style="background-color: #2ecc71"
+                    ></div>
+                    <span>Carbs</span>
+                  </div>
+                  <div class="legend-item">
+                    <div
+                      class="legend-color"
+                      style="background-color: #e74c3c"
+                    ></div>
+                    <span>Fat</span>
+                  </div>
+                </div>
+
+                <div class="macro-chart">
+                  <div
+                    class="macro-protein"
+                    id="maintenance-protein-chart"
+                    style="width: 30%"
+                  ></div>
+                  <div
+                    class="macro-carbs"
+                    id="maintenance-carbs-chart"
+                    style="width: 45%"
+                  ></div>
+                  <div
+                    class="macro-fat"
+                    id="maintenance-fat-chart"
+                    style="width: 25%"
+                  ></div>
+                </div>
+
+                <table class="macro-table">
+                  <thead>
+                    <tr>
+                      <th>Macronutrient</th>
+                      <th>Grams</th>
+                      <th>Calories</th>
+                      <th>% of Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Protein</td>
+                      <td id="maintenance-protein">0g</td>
+                      <td id="maintenance-protein-cals">0</td>
+                      <td id="maintenance-protein-percent">0%</td>
+                    </tr>
+                    <tr>
+                      <td>Carbohydrates</td>
+                      <td id="maintenance-carbs">0g</td>
+                      <td id="maintenance-carbs-cals">0</td>
+                      <td id="maintenance-carbs-percent">0%</td>
+                    </tr>
+                    <tr>
+                      <td>Fat</td>
+                      <td id="maintenance-fat">0g</td>
+                      <td id="maintenance-fat-cals">0</td>
+                      <td id="maintenance-fat-percent">0%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div id="weight-gain-tab" class="tab-content">
+                <div class="macro-legend">
+                  <div class="legend-item">
+                    <div
+                      class="legend-color"
+                      style="background-color: #3498db"
+                    ></div>
+                    <span>Protein</span>
+                  </div>
+                  <div class="legend-item">
+                    <div
+                      class="legend-color"
+                      style="background-color: #2ecc71"
+                    ></div>
+                    <span>Carbs</span>
+                  </div>
+                  <div class="legend-item">
+                    <div
+                      class="legend-color"
+                      style="background-color: #e74c3c"
+                    ></div>
+                    <span>Fat</span>
+                  </div>
+                </div>
+
+                <div class="macro-chart">
+                  <div
+                    class="macro-protein"
+                    id="weight-gain-protein-chart"
+                    style="width: 25%"
+                  ></div>
+                  <div
+                    class="macro-carbs"
+                    id="weight-gain-carbs-chart"
+                    style="width: 50%"
+                  ></div>
+                  <div
+                    class="macro-fat"
+                    id="weight-gain-fat-chart"
+                    style="width: 25%"
+                  ></div>
+                </div>
+
+                <table class="macro-table">
+                  <thead>
+                    <tr>
+                      <th>Macronutrient</th>
+                      <th>Grams</th>
+                      <th>Calories</th>
+                      <th>% of Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Protein</td>
+                      <td id="weight-gain-protein">0g</td>
+                      <td id="weight-gain-protein-cals">0</td>
+                      <td id="weight-gain-protein-percent">0%</td>
+                    </tr>
+                    <tr>
+                      <td>Carbohydrates</td>
+                      <td id="weight-gain-carbs">0g</td>
+                      <td id="weight-gain-carbs-cals">0</td>
+                      <td id="weight-gain-carbs-percent">0%</td>
+                    </tr>
+                    <tr>
+                      <td>Fat</td>
+                      <td id="weight-gain-fat">0g</td>
+                      <td id="weight-gain-fat-cals">0</td>
+                      <td id="weight-gain-fat-percent">0%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="result-summary-text" id="result-summary">
+              Fill in your information and click calculate to get personalized
+              recommendations.
+            </div>
+          </div>
+
+          <div class="loading" id="loading"></div>
+        </div>
+      </div>
+
+      <!-- <div class="info-section">
+        <h2>Understanding Your Nutritional Needs</h2>
+
+        <div class="info-card">
+          <h3 class="info-title">What is BMR (Basal Metabolic Rate)?</h3>
+          <p>
+            Basal Metabolic Rate represents the minimum amount of energy
+            (calories) your body needs to perform essential functions while at
+            complete rest. This includes breathing, circulating blood,
+            regulating body temperature, growing and repairing cells, and
+            managing hormone levels.
+          </p>
+          <p>
+            BMR accounts for approximately 60-70% of your total daily energy
+            expenditure and is influenced by factors such as:
+          </p>
+          <ul>
+            <li>Age (BMR decreases as you age)</li>
+            <li>Body composition (more muscle mass increases BMR)</li>
+          </ul>
+        </div>
+      </div>
+    </div> -->
+    <div class="info-section">
+        <h2>Advanced Calorie & Macro Calculator</h2>
+      
+        <div class="info-card">
+          <h3 class="info-title">What Does This Calculator Do?</h3>
+          <p>
+            Our Advanced Calorie & Macro Calculator helps you determine your daily energy needs and macronutrient targets, customized to your body and goals. Whether you're trying to lose fat, build muscle, or maintain weight, this tool gives you science-backed insights.
+          </p>
+          <ul>
+            <li><strong>BMR:</strong> Calculate your Basal Metabolic Rate</li>
+            <li><strong>TDEE:</strong> Estimate your Total Daily Energy Expenditure</li>
+            <li><strong>Calorie Goals:</strong> Get target calories for weight loss, maintenance, or gain</li>
+            <li><strong>Macronutrient Split:</strong> Balanced protein, fat, and carbohydrate recommendations</li>
+          </ul>
+        </div>
+      
+        <div class="info-card">
+          <h3 class="info-title">How It Works</h3>
+          <p>
+            You’ll input your age, gender, weight, height, activity level, and fitness goal. The calculator uses trusted equations like Mifflin-St Jeor or Katch-McArdle to calculate your BMR and TDEE. Based on that, we generate your optimal calorie intake and daily macros.
+          </p>
+          <ul>
+            <li>Get personalized results based on your physical profile</li>
+            <li>Choose your goal: lose weight, maintain, or build muscle</li>
+            <li>Select your preferred macro style (e.g., balanced, low-carb, high-protein)</li>
+          </ul>
+        </div>
+      
+        <div class="info-card">
+          <h3 class="info-title">Why It Matters</h3>
+          <p>
+            Understanding your caloric needs and macronutrient balance is key to reaching your fitness goals effectively. Instead of guessing, use tailored data to fuel your body correctly and see real progress.
+          </p>
+          <ul>
+            <li>Remove guesswork and improve diet precision</li>
+            <li>Support fat loss, muscle growth, or performance goals</li>
+            <li>Adaptable for all diets (keto, vegan, high-protein, etc.)</li>
+          </ul>
+        </div>
+      
+        <div class="info-card">
+          <h3 class="info-title">Macronutrient Breakdown</h3>
+          <p>
+            Macronutrients are the building blocks of your diet. Based on your calorie target, the calculator recommends how many grams of each you should eat daily:
+          </p>
+          <ul>
+            <li><strong>Protein:</strong> Supports muscle repair, growth, and appetite control</li>
+            <li><strong>Fat:</strong> Essential for hormones, energy, and cell health</li>
+            <li><strong>Carbohydrates:</strong> Your body's primary energy source</li>
+          </ul>
+        </div>
+      
+        <div class="info-card">
+          <h3 class="info-title">Example Result</h3>
+          <p>
+            Here's a sample output for a 30-year-old active male (180 cm, 75 kg) aiming to gain muscle:
+          </p>
+          <ul>
+            <li><strong>BMR:</strong> 1,750 kcal</li>
+            <li><strong>TDEE:</strong> 2,700 kcal</li>
+            <li><strong>Goal Calories:</strong> 2,950 kcal (10% surplus)</li>
+            <li><strong>Macros:</strong>
+              <ul>
+                <li>Protein: 180g</li>
+                <li>Fat: 90g</li>
+                <li>Carbs: 340g</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      
+        <div class="info-card">
+          <h3 class="info-title">Who Is This For?</h3>
+          <p>
+            This calculator is designed for anyone serious about improving their health and physique:
+          </p>
+          <ul>
+            <li>Fitness enthusiasts and gym-goers</li>
+            <li>People on weight loss or muscle gain plans</li>
+            <li>Personal trainers and nutrition coaches</li>
+            <li>Anyone who wants to understand their body’s needs better</li>
+          </ul>
+        </div>
+      </div>      
+    
+    <script src="script.js"></script>
+  </body>
+</html>
